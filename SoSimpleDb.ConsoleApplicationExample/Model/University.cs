@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SoSimpleDb.ConsoleApplicationExample.Model
 {
-    public class University
+    public class University : SoSimpleDbModelBase
     {
         public string Name { get; set; }
         List<Degree> Degrees { get; set; } = new List<Degree>();

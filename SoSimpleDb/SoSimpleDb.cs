@@ -39,5 +39,20 @@ namespace SoSimpleDb
         {
             return data;
         }
+
+        public int Count()
+        {
+            return data.Count;
+        }
+
+        public void Clear()
+        {
+            data.Clear();
+        }
+
+        public void ClearAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

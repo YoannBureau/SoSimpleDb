@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SoSimpleDb.ConsoleApplicationExample.Model
 {
-    public class Degree
+    public class Degree : SoSimpleDbModelBase
     {
         public int Level { get; set; }
     }
