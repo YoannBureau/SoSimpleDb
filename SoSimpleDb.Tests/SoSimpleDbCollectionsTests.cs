@@ -12,7 +12,7 @@ namespace SoSimpleDb.Tests
         [TestInitialize]
         public void ClearBeforeTest()
         {
-            SoSimpleDb<Country>.Instance.Clear();
+            SoSimpleDb<Country>.Instance.DeleteAll();
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace SoSimpleDb.Tests
 
             SoSimpleDb<Country>.Instance.Add(countries);
 
-            SoSimpleDb<Country>.Instance.Clear();
+            SoSimpleDb<Country>.Instance.DeleteAll();
             var result = SoSimpleDb<Country>.Instance.Count();
 
             Assert.IsTrue(result == 0);
@@ -156,5 +156,61 @@ namespace SoSimpleDb.Tests
             Assert.IsTrue(result.Contains(country3));
             Assert.IsTrue(result.Count() == 3);
         }
+
+        [TestMethod]
+        public void UpdateItem()
+        {
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            SoSimpleDb<Country>.Instance.Add(country1);
+
+            Country country2 = new Country() { Id = 1, Name = $"Country #2" };
+            SoSimpleDb<Country>.Instance.Update(country2);
+
+            var result = SoSimpleDb<Country>.Instance.Get(1);
+
+            Assert.IsTrue(result == country2);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(IdNotFoundException))]
+        public void CantUpdateAnItemThatDontExists()
+        {
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            SoSimpleDb<Country>.Instance.Add(country1);
+
+            Country country2 = new Country() { Id = 2, Name = $"Country #2" };
+            SoSimpleDb<Country>.Instance.Update(country2);
+        }
+
+        [TestMethod]
+        public void DeleteItem()
+        {
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            SoSimpleDb<Country>.Instance.Add(country1);
+
+            Country country2 = new Country() { Id = 2, Name = $"Country #2" };
+            SoSimpleDb<Country>.Instance.Add(country2);
+
+            SoSimpleDb<Country>.Instance.Delete(1);
+
+            var result = SoSimpleDb<Country>.Instance.GetAll().FirstOrDefault(x => x.Id == 1);
+
+            Assert.IsTrue(result == null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(IdNotFoundException))]
+        public void CantDeleteAnItemThatDontExists()
+        {
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            SoSimpleDb<Country>.Instance.Add(country1);
+
+            Country country2 = new Country() { Id = 2, Name = $"Country #2" };
+            SoSimpleDb<Country>.Instance.Add(country2);
+
+            SoSimpleDb<Country>.Instance.Delete(10);
+        }
+
+        //Get Id that dont exists throzs an exception
     }
 }
