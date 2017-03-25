@@ -43,6 +43,11 @@ namespace SoSimpleDb
             return data.Single(x => x.Id == id);
         }
 
+        public IEnumerable<T> Get(Func<T, bool> function)
+        {
+            return data.Where(function);
+        }
+
         public IEnumerable<T> GetAll()
         {
             return data;
@@ -56,11 +61,6 @@ namespace SoSimpleDb
         public void Clear()
         {
             data.Clear();
-        }
-
-        public void ClearAll()
-        {
-            throw new NotImplementedException();
         }
     }
 }

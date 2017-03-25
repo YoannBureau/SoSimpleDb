@@ -105,7 +105,7 @@ namespace SoSimpleDb.Tests
 
             Assert.IsTrue(result == 0);
         }
-        
+
         [TestMethod]
         [ExpectedException(typeof(IdAlreadyThereException))]
         public void CantAddAnItemWithTheSameId()
@@ -115,6 +115,46 @@ namespace SoSimpleDb.Tests
 
             SoSimpleDb<Country>.Instance.Add(country1);
             SoSimpleDb<Country>.Instance.Add(country2);
+        }
+
+        [TestMethod]
+        public void GetOneByExpression()
+        {
+            List<Country> countries = new List<Country>();
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            Country country2 = new Country() { Id = 2, Name = $"Country #2" };
+            Country country3 = new Country() { Id = 3, Name = $"Country #3" };
+            countries.Add(country1);
+            countries.Add(country2);
+            countries.Add(country3);
+
+            SoSimpleDb<Country>.Instance.Add(countries);
+
+            var result = SoSimpleDb<Country>.Instance.Get(x => x.Name == country1.Name);
+
+            Assert.IsTrue(result.Contains(country1));
+            Assert.IsTrue(result.Count() == 1);
+        }
+
+        [TestMethod]
+        public void GetMultipleByExpression()
+        {
+            List<Country> countries = new List<Country>();
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            Country country2 = new Country() { Id = 2, Name = $"Country #2" };
+            Country country3 = new Country() { Id = 3, Name = $"Country #3" };
+            countries.Add(country1);
+            countries.Add(country2);
+            countries.Add(country3);
+
+            SoSimpleDb<Country>.Instance.Add(countries);
+
+            var result = SoSimpleDb<Country>.Instance.Get(x => x.Name.Contains("Country"));
+
+            Assert.IsTrue(result.Contains(country1));
+            Assert.IsTrue(result.Contains(country2));
+            Assert.IsTrue(result.Contains(country3));
+            Assert.IsTrue(result.Count() == 3);
         }
     }
 }
