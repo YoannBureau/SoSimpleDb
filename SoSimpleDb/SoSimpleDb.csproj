@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IdNotFoundException.cs" />
-    <Compile Include="IdAlreadyThereException.cs" />
+    <Compile Include="IdAlreadyExistsException.cs" />
     <Compile Include="SoSimpleDb.cs" />
     <Compile Include="SoSimpleDbModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

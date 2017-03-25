@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SoSimpleDb
 {
-    public class IdAlreadyThereException : Exception
+    public class IdAlreadyExistsException : Exception
     {
-        public IdAlreadyThereException(string message) : base(message)
+        public IdAlreadyExistsException(string message) : base(message)
         {
         }
     }

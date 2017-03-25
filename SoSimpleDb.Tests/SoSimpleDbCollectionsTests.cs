@@ -69,6 +69,19 @@ namespace SoSimpleDb.Tests
             Assert.IsTrue(result == country1);
         }
 
+
+        //Get Id that dont exists throzs an exception
+        [TestMethod]
+        [ExpectedException(typeof(IdNotFoundException))]
+        public void CantGetAnItemWithAnIdThatDontExists()
+        {
+            Country country1 = new Country() { Id = 1, Name = $"Country #1" };
+            SoSimpleDb<Country>.Instance.Add(country1);
+
+            SoSimpleDb<Country>.Instance.Get(2);
+        }
+
+
         [TestMethod]
         public void GetCount()
         {
@@ -107,7 +120,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IdAlreadyThereException))]
+        [ExpectedException(typeof(IdAlreadyExistsException))]
         public void CantAddAnItemWithTheSameId()
         {
             var country1 = new Country() { Id = 1 };
@@ -210,7 +223,5 @@ namespace SoSimpleDb.Tests
 
             SoSimpleDb<Country>.Instance.Delete(10);
         }
-
-        //Get Id that dont exists throzs an exception
     }
 }

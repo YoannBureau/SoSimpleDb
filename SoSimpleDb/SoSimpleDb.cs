@@ -12,6 +12,9 @@ namespace SoSimpleDb
         private static readonly Lazy<SoSimpleDb<T>> lazy =
             new Lazy<SoSimpleDb<T>>(() => new SoSimpleDb<T>());
 
+        /// <summary>
+        /// Represents the instance of the SoSimpleDb database
+        /// </summary>
         public static SoSimpleDb<T> Instance { get { return lazy.Value; } }
 
         private SoSimpleDb()
@@ -28,7 +31,7 @@ namespace SoSimpleDb
         {
             if(data.Any(x => x.Id == obj.Id))
             {
-                throw new IdAlreadyThereException($"An object of type ${typeof(T).FullName} with Id ${obj.Id} is already in Db.");
+                throw new IdAlreadyExistsException($"An object of type ${typeof(T).FullName} with Id ${obj.Id} is already in Db.");
             }
 
             data.Add(obj);
@@ -53,11 +56,13 @@ namespace SoSimpleDb
         /// <returns></returns>
         public T Get(int id)
         {
+            ThrowExceptionIfNotExists(id);
+
             return data.Single(x => x.Id == id);
         }
 
         /// <summary>
-        /// Get a collection of items from the database that matches with the pattern passed as parameter
+        /// Gets a collection of items from the database that matches with the pattern passed as parameter
         /// </summary>
         /// <param name="function"></param>
         /// <returns></returns>
@@ -85,35 +90,42 @@ namespace SoSimpleDb
         }
 
         /// <summary>
-        /// Removes the items from the database
+        /// Deletes all the items in the database
         /// </summary>
         public void DeleteAll()
         {
             data.Clear();
         }
 
-        //Removes the items from the database
+        /// <summary>
+        /// Updates an item in the database
+        /// </summary>
+        /// <param name="obj"></param>
         public void Update(T obj)
         {
-            if(!data.Any(x => x.Id == obj.Id))
-            {
-                throw new IdNotFoundException($"Object of type ${typeof(T).FullName} with Id ${obj.Id} has not been found in Db.");
-            }
+            ThrowExceptionIfNotExists(obj.Id);
 
             Delete(obj.Id);
             Add(obj);
         }
 
-        //Delete One
+        /// <summary>
+        /// Deletes on item in the database
+        /// </summary>
+        /// <param name="id"></param>
         public void Delete(int id)
+        {
+            ThrowExceptionIfNotExists(id);
+
+            data.Remove(Get(id));
+        }
+
+        private void ThrowExceptionIfNotExists(int id)
         {
             if (!data.Any(x => x.Id == id))
             {
                 throw new IdNotFoundException($"Object of type ${typeof(T).FullName} with Id ${id} has not been found in Db.");
             }
-
-            data.Remove(Get(id));
         }
-
     }
 }
