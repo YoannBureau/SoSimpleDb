@@ -22,12 +22,20 @@ namespace SoSimpleDb
 
         public void Add(T obj)
         {
+            if(data.Any(x => x.Id == obj.Id))
+            {
+                throw new IdAlreadyThereException($"An object of type ${typeof(T).FullName} with Id ${obj.Id} is already in Db.");
+            }
+
             data.Add(obj);
         }
 
         public void Add(IEnumerable<T> objs)
         {
-            data.AddRange(objs);
+            foreach (var obj in objs)
+            {
+                Add(obj);
+            }
         }
 
         public T Get(int id)

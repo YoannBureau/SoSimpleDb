@@ -105,7 +105,16 @@ namespace SoSimpleDb.Tests
 
             Assert.IsTrue(result == 0);
         }
+        
+        [TestMethod]
+        [ExpectedException(typeof(IdAlreadyThereException))]
+        public void CantAddAnItemWithTheSameId()
+        {
+            var country1 = new Country() { Id = 1 };
+            var country2 = new Country() { Id = 1 };
 
-        //Can't add items with id already in DB
+            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Add(country2);
+        }
     }
 }
