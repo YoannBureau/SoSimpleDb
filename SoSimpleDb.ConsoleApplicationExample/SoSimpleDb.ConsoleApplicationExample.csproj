@@ -51,8 +51,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Model\Country.cs" />
+    <Compile Include="Model\Degree.cs" />
+    <Compile Include="Model\University.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SoSimpleDb\SoSimpleDb.csproj">
+      <Project>{83F1F6C8-A9EC-44FA-A0EF-DCDABD590002}</Project>
+      <Name>SoSimpleDb</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
