@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SoSimpleDb")]
-[assembly: AssemblyCopyright("Copyright ©YoannBureau  2017")]
+[assembly: AssemblyCopyright("Copyright ©YoannBureau 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
