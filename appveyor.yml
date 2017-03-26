@@ -10,5 +10,8 @@ nuget:
 build:
   publish_nuget: true
   verbosity: minimal
+test:
+after_tests:
+- ps: .\NuGet\pack.ps1
 artifacts:
 - path: SoSimpleDb\bin\$(configuration)\SoSimpleDb.dll
