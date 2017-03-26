@@ -12,6 +12,6 @@
         <summary>If you want to store collections and you don't want to deal with SQL or avoid learning NoSQL, SoSimpleDb is made for you.</summary>
     </metadata>
   <files>
-    <file src="..\SoSimpleDb\bin\Release\SoSimpleDb.dll" target="lib\net452" />
+    <file src="..\SoSimpleDb\bin\Release\SoSimpleDb.dll" target="lib\net4" />
   </files>
 </package>
