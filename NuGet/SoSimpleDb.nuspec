@@ -8,8 +8,8 @@
         <licenseUrl>https://github.com/YoannBureau/SoSimpleDb/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/YoannBureau/SoSimpleDb</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>My package description.</description>
-        <summary>A simple way to store data in your applications. If you want to store collections and you don't want to deal with SQL or avoid learning NoSQL, SoSimpleDb is made for you.</summary>
+        <description>A simple way to store data in your applications.</description>
+        <summary>If you want to store collections and you don't want to deal with SQL or avoid learning NoSQL, SoSimpleDb is made for you.</summary>
     </metadata>
   <files>
     <file src="..\SoSimpleDb\bin\Release\SoSimpleDb.dll" target="lib\net452" />
