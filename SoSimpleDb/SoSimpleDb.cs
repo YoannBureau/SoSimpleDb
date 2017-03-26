@@ -159,7 +159,7 @@ namespace SoSimpleDb
         {
             if (!File.Exists(FileStoragePath))
             {
-                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
+                CreateEmptyStorageFile();
             }
 
             dynamic fileStorageJsonObject = JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
@@ -174,7 +174,7 @@ namespace SoSimpleDb
         {
             if (!File.Exists(FileStoragePath))
             {
-                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
+                CreateEmptyStorageFile();
             }
 
             var dataJToken = JToken.FromObject(data);
@@ -193,6 +193,11 @@ namespace SoSimpleDb
 
             var modifiedJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(fileStorageJsonObject, Formatting.Indented);
             File.WriteAllText(FileStoragePath, modifiedJsonString);
+        }
+
+        private void CreateEmptyStorageFile()
+        {
+            File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
         }
 
         private string GetCollectionNameInFileStorage()
