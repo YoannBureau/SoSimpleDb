@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>SoSimpleDb</id>
         <version>$version$</version>
@@ -11,7 +11,7 @@
         <description>A simple way to store data in your applications.</description>
         <summary>If you want to store collections and you don't want to deal with SQL or avoid learning NoSQL, SoSimpleDb is made for you.</summary>
     </metadata>
-  <files>
-    <file src="..\SoSimpleDb\bin\Release\SoSimpleDb.dll" target="lib\net452" />
-  </files>
+    <files>
+        <file src="lib\net40\_._" target="lib\net40\_._" />
+    </files>
 </package>
