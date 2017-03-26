@@ -24,9 +24,9 @@ namespace SoSimpleDb.Tests
                 Name = "France"
             };
 
-            SoSimpleDb<Country>.Instance.Add(country);
+            SoSimpleDb<Country>.Instance.Insert(country);
 
-            var result = SoSimpleDb<Country>.Instance.Get(1);
+            var result = SoSimpleDb<Country>.Instance.Select(1);
 
             Assert.IsTrue(result == country);
         }
@@ -40,9 +40,9 @@ namespace SoSimpleDb.Tests
                 countries.Add(new Country() { Id = i, Name = $"Country #{i}" });
             }
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
-            var result = SoSimpleDb<Country>.Instance.GetAll();
+            var result = SoSimpleDb<Country>.Instance.SelectAll();
 
 
             foreach (var country in countries)
@@ -62,9 +62,9 @@ namespace SoSimpleDb.Tests
             countries.Add(country2);
             countries.Add(country3);
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
-            var result = SoSimpleDb<Country>.Instance.Get(1);
+            var result = SoSimpleDb<Country>.Instance.Select(1);
 
             Assert.IsTrue(result == country1);
         }
@@ -76,9 +76,9 @@ namespace SoSimpleDb.Tests
         public void CantGetAnItemWithAnIdThatDontExists()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
-            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Insert(country1);
 
-            SoSimpleDb<Country>.Instance.Get(2);
+            SoSimpleDb<Country>.Instance.Select(2);
         }
 
 
@@ -93,7 +93,7 @@ namespace SoSimpleDb.Tests
                 countries.Add(new Country() { Id = i, Name = $"Country #{i}" });
             }
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
             var result = SoSimpleDb<Country>.Instance.Count();
 
@@ -111,7 +111,7 @@ namespace SoSimpleDb.Tests
                 countries.Add(new Country() { Id = i, Name = $"Country #{i}" });
             }
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
             SoSimpleDb<Country>.Instance.DeleteAll();
             var result = SoSimpleDb<Country>.Instance.Count();
@@ -126,8 +126,8 @@ namespace SoSimpleDb.Tests
             var country1 = new Country() { Id = 1 };
             var country2 = new Country() { Id = 1 };
 
-            SoSimpleDb<Country>.Instance.Add(country1);
-            SoSimpleDb<Country>.Instance.Add(country2);
+            SoSimpleDb<Country>.Instance.Insert(country1);
+            SoSimpleDb<Country>.Instance.Insert(country2);
         }
 
         [TestMethod]
@@ -141,9 +141,9 @@ namespace SoSimpleDb.Tests
             countries.Add(country2);
             countries.Add(country3);
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
-            var result = SoSimpleDb<Country>.Instance.Get(x => x.Name == country1.Name);
+            var result = SoSimpleDb<Country>.Instance.Select(x => x.Name == country1.Name);
 
             Assert.IsTrue(result.Contains(country1));
             Assert.IsTrue(result.Count() == 1);
@@ -160,9 +160,9 @@ namespace SoSimpleDb.Tests
             countries.Add(country2);
             countries.Add(country3);
 
-            SoSimpleDb<Country>.Instance.Add(countries);
+            SoSimpleDb<Country>.Instance.Insert(countries);
 
-            var result = SoSimpleDb<Country>.Instance.Get(x => x.Name.Contains("Country"));
+            var result = SoSimpleDb<Country>.Instance.Select(x => x.Name.Contains("Country"));
 
             Assert.IsTrue(result.Contains(country1));
             Assert.IsTrue(result.Contains(country2));
@@ -174,12 +174,12 @@ namespace SoSimpleDb.Tests
         public void UpdateItem()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
-            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Insert(country1);
 
             Country country2 = new Country() { Id = 1, Name = $"Country #2" };
             SoSimpleDb<Country>.Instance.Update(country2);
 
-            var result = SoSimpleDb<Country>.Instance.Get(1);
+            var result = SoSimpleDb<Country>.Instance.Select(1);
 
             Assert.IsTrue(result == country2);
         }
@@ -189,7 +189,7 @@ namespace SoSimpleDb.Tests
         public void CantUpdateAnItemThatDontExists()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
-            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Insert(country1);
 
             Country country2 = new Country() { Id = 2, Name = $"Country #2" };
             SoSimpleDb<Country>.Instance.Update(country2);
@@ -199,14 +199,14 @@ namespace SoSimpleDb.Tests
         public void DeleteItem()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
-            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Insert(country1);
 
             Country country2 = new Country() { Id = 2, Name = $"Country #2" };
-            SoSimpleDb<Country>.Instance.Add(country2);
+            SoSimpleDb<Country>.Instance.Insert(country2);
 
             SoSimpleDb<Country>.Instance.Delete(1);
 
-            var result = SoSimpleDb<Country>.Instance.GetAll().FirstOrDefault(x => x.Id == 1);
+            var result = SoSimpleDb<Country>.Instance.SelectAll().FirstOrDefault(x => x.Id == 1);
 
             Assert.IsTrue(result == null);
         }
@@ -216,10 +216,10 @@ namespace SoSimpleDb.Tests
         public void CantDeleteAnItemThatDontExists()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
-            SoSimpleDb<Country>.Instance.Add(country1);
+            SoSimpleDb<Country>.Instance.Insert(country1);
 
             Country country2 = new Country() { Id = 2, Name = $"Country #2" };
-            SoSimpleDb<Country>.Instance.Add(country2);
+            SoSimpleDb<Country>.Instance.Insert(country2);
 
             SoSimpleDb<Country>.Instance.Delete(10);
         }
