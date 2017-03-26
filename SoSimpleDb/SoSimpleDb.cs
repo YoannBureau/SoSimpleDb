@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +20,25 @@ namespace SoSimpleDb
         private SoSimpleDb()
         {
         }
-        
+
+        private string configCustomPathName = "SoSimpleDb.CustomFile";
+        private string defaultPath = "Data.ssdb";
         private static List<T> data = new List<T>();
+
+        public string FileStoragePath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings.AllKeys.Any(x => x == configCustomPathName))
+                {
+                    return ConfigurationManager.AppSettings[configCustomPathName];
+                }
+                else
+                {
+                    return defaultPath;
+                }
+            }
+        }
 
         /// <summary>
         /// Inserts a new item in the database
