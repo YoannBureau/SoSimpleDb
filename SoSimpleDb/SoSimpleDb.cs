@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +22,27 @@ namespace SoSimpleDb
 
         private SoSimpleDb()
         {
+            ReadDataFromFileStorage();
         }
-        
+
+        private string configCustomPathName = "SoSimpleDb.CustomFile";
+        private string defaultPath = "Data.ssdb";
         private static List<T> data = new List<T>();
+
+        public string FileStoragePath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings.AllKeys.Any(x => x == configCustomPathName))
+                {
+                    return ConfigurationManager.AppSettings[configCustomPathName];
+                }
+                else
+                {
+                    return defaultPath;
+                }
+            }
+        }
 
         /// <summary>
         /// Inserts a new item in the database
@@ -35,6 +56,8 @@ namespace SoSimpleDb
             }
 
             data.Add(obj);
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -98,6 +121,8 @@ namespace SoSimpleDb
         public void DeleteAll()
         {
             data.Clear();
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -109,6 +134,8 @@ namespace SoSimpleDb
             ThrowExceptionIfNotExists(id);
 
             data.Remove(Select(id));
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -126,6 +153,51 @@ namespace SoSimpleDb
             {
                 throw new IdNotFoundException($"Object of type ${typeof(T).FullName} with Id ${id} has not been found in Db.");
             }
+        }
+
+        private void ReadDataFromFileStorage()
+        {
+            if (!File.Exists(FileStoragePath))
+            {
+                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
+            }
+
+            dynamic fileStorageJsonObject = JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
+
+            if (fileStorageJsonObject[GetCollectionNameInFileStorage()] != null)
+            {
+                data = JsonConvert.DeserializeObject<List<T>>(fileStorageJsonObject[GetCollectionNameInFileStorage()].ToString());
+            }
+        }
+
+        private void WriteDataToFileStorage()
+        {
+            if (!File.Exists(FileStoragePath))
+            {
+                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
+            }
+
+            var dataJToken = JToken.FromObject(data);
+
+            dynamic fileStorageJsonObject = JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
+            if(fileStorageJsonObject[GetCollectionNameInFileStorage()] == null)
+            {
+                //Add collection to file storage
+                fileStorageJsonObject.Add(GetCollectionNameInFileStorage(), dataJToken);
+            }
+            else
+            {
+                //Update collection in file storage
+                fileStorageJsonObject[GetCollectionNameInFileStorage()] = dataJToken;
+            }
+
+            var modifiedJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(fileStorageJsonObject, Formatting.Indented);
+            File.WriteAllText(FileStoragePath, modifiedJsonString);
+        }
+
+        private string GetCollectionNameInFileStorage()
+        {
+            return $"{typeof(T).FullName.Replace(".", "_")}_Collection";
         }
     }
 }
