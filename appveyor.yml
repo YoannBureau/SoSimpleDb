@@ -14,3 +14,9 @@ after_build:
 - ps: .\NuGet\pack.ps1
 artifacts:
 - path: SoSimpleDb\bin\$(configuration)\SoSimpleDb.dll
+deploy:
+  provider: NuGet
+  api_key:
+    secure: msgVMfM7J0P9yu2r7JUxcRA1afhvqWftZT1q8ttR/rn61TZWavdN92+rpj05kzgJ
+  skip_symbols: false
+  artifact: /.*\.nupkg/
