@@ -24,10 +24,10 @@ namespace SoSimpleDb
         private static List<T> data = new List<T>();
 
         /// <summary>
-        /// Adds a new item in the database
+        /// Inserts a new item in the database
         /// </summary>
         /// <param name="obj"></param>
-        public void Add(T obj)
+        public void Insert(T obj)
         {
             if(data.Any(x => x.Id == obj.Id))
             {
@@ -38,23 +38,23 @@ namespace SoSimpleDb
         }
 
         /// <summary>
-        /// Adds a new collection of items in the database
+        /// Inserts a new collection of items in the database
         /// </summary>
         /// <param name="objs"></param>
-        public void Add(IEnumerable<T> objs)
+        public void Insert(IEnumerable<T> objs)
         {
             foreach (var obj in objs)
             {
-                Add(obj);
+                Insert(obj);
             }
         }
 
         /// <summary>
-        /// Gets one item from the database that corresponds to the specified Id
+        /// Selects one item from the database that corresponds to the specified Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public T Get(int id)
+        public T Select(int id)
         {
             ThrowExceptionIfNotExists(id);
 
@@ -62,39 +62,22 @@ namespace SoSimpleDb
         }
 
         /// <summary>
-        /// Gets a collection of items from the database that matches with the pattern passed as parameter
+        /// Selects a collection of items from the database that matches with the pattern passed as parameter
         /// </summary>
         /// <param name="function"></param>
         /// <returns></returns>
-        public IEnumerable<T> Get(Func<T, bool> function)
+        public IEnumerable<T> Select(Func<T, bool> function)
         {
             return data.Where(function);
         }
 
         /// <summary>
-        /// Gets all items from the database
+        /// Selects all items from the database
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> SelectAll()
         {
             return data;
-        }
-
-        /// <summary>
-        /// Returns the number of items in the database
-        /// </summary>
-        /// <returns></returns>
-        public int Count()
-        {
-            return data.Count;
-        }
-
-        /// <summary>
-        /// Deletes all the items in the database
-        /// </summary>
-        public void DeleteAll()
-        {
-            data.Clear();
         }
 
         /// <summary>
@@ -106,18 +89,35 @@ namespace SoSimpleDb
             ThrowExceptionIfNotExists(obj.Id);
 
             Delete(obj.Id);
-            Add(obj);
+            Insert(obj);
         }
 
         /// <summary>
-        /// Deletes on item in the database
+        /// Deletes all the items in the database
+        /// </summary>
+        public void DeleteAll()
+        {
+            data.Clear();
+        }
+
+        /// <summary>
+        /// Deletes one item in the database
         /// </summary>
         /// <param name="id"></param>
         public void Delete(int id)
         {
             ThrowExceptionIfNotExists(id);
 
-            data.Remove(Get(id));
+            data.Remove(Select(id));
+        }
+
+        /// <summary>
+        /// Returns the number of items in the database
+        /// </summary>
+        /// <returns></returns>
+        public int Count()
+        {
+            return data.Count;
         }
 
         private void ThrowExceptionIfNotExists(int id)
