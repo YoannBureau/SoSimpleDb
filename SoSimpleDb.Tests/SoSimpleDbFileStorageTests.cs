@@ -4,6 +4,8 @@ using SoSimpleDb.ConsoleApplicationExample.Model;
 using System.Configuration;
 using System.Linq;
 using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace SoSimpleDb.Tests
 {
@@ -41,11 +43,51 @@ namespace SoSimpleDb.Tests
 
             string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
 
-            Assert.IsTrue(!File.Exists(fileStoragePath));
+            Assert.IsFalse(File.Exists(fileStoragePath));
 
             SoSimpleDb<Country>.Instance.Insert(new Country() { Id = 1, Name = "Country #1" });
 
             Assert.IsTrue(File.Exists(fileStoragePath));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenInsertOne()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(newCountry1);
+            SoSimpleDb<Country>.Instance.Insert(newCountry2);
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry1));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry2));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenInsertMany()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry1));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry2));
+        }
+
+        public bool JsonFileContainsObject(string filePath, object obj)
+        {
+            string fileStorageContent = File.ReadAllText(filePath).Replace(" ", "");
+            string objectJson = JsonConvert.SerializeObject(obj, Formatting.Indented).Replace(" ", "");
+            return fileStorageContent.Contains(objectJson);
         }
 
 

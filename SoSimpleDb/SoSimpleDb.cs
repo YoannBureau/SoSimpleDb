@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -154,8 +156,40 @@ namespace SoSimpleDb
         {
             if(!File.Exists(FileStoragePath))
             {
-                File.Create(FileStoragePath);
+                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
             }
+
+            //var lol = new
+            //{
+            //    CountryCollection = new List<string> { "item 1", "item 4", "item 3" },
+            //    DegreeCollection = new List<string> { "item 1", "item 4", "item 3" }
+            //};
+
+            //var res = JsonConvert.SerializeObject(lol);
+
+            var dataJToken = JToken.FromObject(data);
+
+            dynamic fileStorageJsonObject = Newtonsoft.Json.JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
+            if(fileStorageJsonObject[GetCollectionNameInFileStorage()] == null)
+            {
+                //Add collection to file storage
+                fileStorageJsonObject.Add(GetCollectionNameInFileStorage(), dataJToken);
+            }
+            else
+            {
+                //Update collection in file storage
+
+                fileStorageJsonObject[GetCollectionNameInFileStorage()] = dataJToken;
+            }
+
+            var modifiedJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(fileStorageJsonObject, Formatting.Indented);
+
+            File.WriteAllText(FileStoragePath, modifiedJsonString);
+        }
+
+        private string GetCollectionNameInFileStorage()
+        {
+            return $"{typeof(T).FullName.Replace(".", "_")}_Collection";
         }
     }
 }
