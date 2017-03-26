@@ -18,6 +18,7 @@ namespace SoSimpleDb.Tests
             EnsureThatThereIsNoCustomPathInApplicationFile();
 
             SoSimpleDb<Country>.Instance.DeleteAll();
+            SoSimpleDb<University>.Instance.DeleteAll();
         }
 
         [TestMethod]
@@ -35,6 +36,8 @@ namespace SoSimpleDb.Tests
             AddCustomPathToConfigurationFile(customPath);
 
             Assert.IsTrue(SoSimpleDb<Country>.Instance.FileStoragePath == customPath);
+
+            EnsureThatThereIsNoCustomPathInApplicationFile();
         }
 
         [TestMethod]
@@ -138,6 +141,82 @@ namespace SoSimpleDb.Tests
             Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry1));
             Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry2));
         }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenInsertingInSeveralCollections()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry = new Country() { Id = 1, Name = "Country #1" };
+            SoSimpleDb<Country>.Instance.Insert(newCountry);
+
+            University newUniversity = new University() { Id = 1, Name = "University #1", Degrees = new List<Degree>() { new Degree() { Level = 13 } } };
+            SoSimpleDb<University>.Instance.Insert(newUniversity);
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newUniversity));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenUpdatingInSeveralCollections()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            University newUniversity1 = new University() { Id = 1, Name = "Country #1" };
+            University newUniversity2 = new University() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<University>.Instance.Insert(new List<University>() { newUniversity1, newUniversity2 });
+
+            Country newCountry2Bis = new Country() { Id = 2, Name = "Country #2 Bis" };
+            SoSimpleDb<Country>.Instance.Update(newCountry2Bis);
+
+            University newUniversity2Bis = new University() { Id = 2, Name = "Unversity #2 Bis" };
+            SoSimpleDb<University>.Instance.Update(newUniversity2Bis);
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry1));
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry2));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry2Bis));
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newUniversity1));
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newUniversity2));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newUniversity2Bis));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenDeletingInSeveralCollections()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            University newUniversity1 = new University() { Id = 1, Name = "Country #1" };
+            University newUniversity2 = new University() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<University>.Instance.Insert(new List<University>() { newUniversity1, newUniversity2 });
+            
+            SoSimpleDb<Country>.Instance.Delete(2);
+            SoSimpleDb<University>.Instance.Delete(2);
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry1));
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry2));
+
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newUniversity1));
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newUniversity2));
+        }
+
 
         public bool JsonFileContainsObject(string filePath, object obj)
         {

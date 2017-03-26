@@ -9,6 +9,6 @@ namespace SoSimpleDb.ConsoleApplicationExample.Model
     public class University : SoSimpleDbModelBase
     {
         public string Name { get; set; }
-        List<Degree> Degrees { get; set; } = new List<Degree>();
+        public List<Degree> Degrees { get; set; } = new List<Degree>();
     }
 }
