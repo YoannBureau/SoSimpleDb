@@ -16,7 +16,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        public void AddSingleAndGetSingleById()
+        public void InsertSingleAndSelectSingleById()
         {
             Country country = new Country()
             {
@@ -32,7 +32,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        public void AddMultipleAndGetAll()
+        public void InsertMultipleAndSelectAll()
         {
             List<Country> countries = new List<Country>();
             for (int i = 0; i < 10; i++)
@@ -52,7 +52,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        public void AddMultipleAndGetSingleById()
+        public void InsertMultipleAndSelectSingleById()
         {
             List<Country> countries = new List<Country>();
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
@@ -70,10 +70,10 @@ namespace SoSimpleDb.Tests
         }
 
 
-        //Get Id that dont exists throzs an exception
+        //Select Id that dont exists throzs an exception
         [TestMethod]
         [ExpectedException(typeof(IdNotFoundException))]
-        public void CantGetAnItemWithAnIdThatDontExists()
+        public void CantSelectAnItemWithAnIdThatDontExists()
         {
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
             SoSimpleDb<Country>.Instance.Insert(country1);
@@ -131,7 +131,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        public void GetOneByExpression()
+        public void SelectOneByExpression()
         {
             List<Country> countries = new List<Country>();
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
@@ -150,7 +150,7 @@ namespace SoSimpleDb.Tests
         }
 
         [TestMethod]
-        public void GetMultipleByExpression()
+        public void SelectMultipleByExpression()
         {
             List<Country> countries = new List<Country>();
             Country country1 = new Country() { Id = 1, Name = $"Country #1" };
