@@ -22,6 +22,7 @@ namespace SoSimpleDb
 
         private SoSimpleDb()
         {
+            ReadDataFromFileStorage();
         }
 
         private string configCustomPathName = "SoSimpleDb.CustomFile";
@@ -120,6 +121,8 @@ namespace SoSimpleDb
         public void DeleteAll()
         {
             data.Clear();
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -152,24 +155,31 @@ namespace SoSimpleDb
             }
         }
 
-        private void WriteDataToFileStorage()
+        private void ReadDataFromFileStorage()
         {
-            if(!File.Exists(FileStoragePath))
+            if (!File.Exists(FileStoragePath))
             {
                 File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
             }
 
-            //var lol = new
-            //{
-            //    CountryCollection = new List<string> { "item 1", "item 4", "item 3" },
-            //    DegreeCollection = new List<string> { "item 1", "item 4", "item 3" }
-            //};
+            dynamic fileStorageJsonObject = JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
 
-            //var res = JsonConvert.SerializeObject(lol);
+            if (fileStorageJsonObject[GetCollectionNameInFileStorage()] != null)
+            {
+                data = JsonConvert.DeserializeObject<List<T>>(fileStorageJsonObject[GetCollectionNameInFileStorage()].ToString());
+            }
+        }
+
+        private void WriteDataToFileStorage()
+        {
+            if (!File.Exists(FileStoragePath))
+            {
+                File.WriteAllText(FileStoragePath, JsonConvert.SerializeObject(new { }));
+            }
 
             var dataJToken = JToken.FromObject(data);
 
-            dynamic fileStorageJsonObject = Newtonsoft.Json.JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
+            dynamic fileStorageJsonObject = JsonConvert.DeserializeObject(File.ReadAllText(FileStoragePath));
             if(fileStorageJsonObject[GetCollectionNameInFileStorage()] == null)
             {
                 //Add collection to file storage
@@ -178,12 +188,10 @@ namespace SoSimpleDb
             else
             {
                 //Update collection in file storage
-
                 fileStorageJsonObject[GetCollectionNameInFileStorage()] = dataJToken;
             }
 
             var modifiedJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(fileStorageJsonObject, Formatting.Indented);
-
             File.WriteAllText(FileStoragePath, modifiedJsonString);
         }
 

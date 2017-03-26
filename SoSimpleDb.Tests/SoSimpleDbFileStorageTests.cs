@@ -15,6 +15,8 @@ namespace SoSimpleDb.Tests
         [TestInitialize]
         public void ClearBeforeTest()
         {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+
             SoSimpleDb<Country>.Instance.DeleteAll();
         }
 
@@ -81,6 +83,60 @@ namespace SoSimpleDb.Tests
 
             Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry1));
             Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry2));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenUpdate()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            Country newCountry2Bis = new Country { Id = 2, Name = "Country #2 Bis" };
+            SoSimpleDb<Country>.Instance.Update(newCountry2Bis);
+
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry2));
+            Assert.IsTrue(JsonFileContainsObject(fileStoragePath, newCountry2Bis));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenDeleteOne()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            SoSimpleDb<Country>.Instance.Delete(1);
+
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry1));
+        }
+
+        [TestMethod]
+        public void FileStorageIsFilledWhenDeleteAll()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Country newCountry1 = new Country() { Id = 1, Name = "Country #1" };
+            Country newCountry2 = new Country() { Id = 2, Name = "Country #2" };
+            SoSimpleDb<Country>.Instance.Insert(new List<Country>() { newCountry1, newCountry2 });
+
+            SoSimpleDb<Country>.Instance.DeleteAll();
+
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry1));
+            Assert.IsFalse(JsonFileContainsObject(fileStoragePath, newCountry2));
         }
 
         public bool JsonFileContainsObject(string filePath, object obj)
