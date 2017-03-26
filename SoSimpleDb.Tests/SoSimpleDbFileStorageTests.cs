@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SoSimpleDb.ConsoleApplicationExample.Model;
 using System.Configuration;
 using System.Linq;
+using System.IO;
 
 namespace SoSimpleDb.Tests
 {
@@ -32,6 +33,22 @@ namespace SoSimpleDb.Tests
             Assert.IsTrue(SoSimpleDb<Country>.Instance.FileStoragePath == customPath);
         }
 
+        [TestMethod]
+        public void FileStorageIsCreatedIsNotExists()
+        {
+            EnsureThatThereIsNoCustomPathInApplicationFile();
+            DeleteFileStorage();
+
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+
+            Assert.IsTrue(!File.Exists(fileStoragePath));
+
+            SoSimpleDb<Country>.Instance.Insert(new Country() { Id = 1, Name = "Country #1" });
+
+            Assert.IsTrue(File.Exists(fileStoragePath));
+        }
+
+
         private void AddCustomPathToConfigurationFile(string customPath)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -49,6 +66,12 @@ namespace SoSimpleDb.Tests
                 config.Save(ConfigurationSaveMode.Modified, true);
                 ConfigurationManager.RefreshSection("appSettings");
             }
+        }
+
+        private void DeleteFileStorage()
+        {
+            string fileStoragePath = SoSimpleDb<Country>.Instance.FileStoragePath;
+            File.Delete(fileStoragePath);
         }
     }
 }

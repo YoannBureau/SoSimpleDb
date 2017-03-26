@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +53,8 @@ namespace SoSimpleDb
             }
 
             data.Add(obj);
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -126,6 +129,8 @@ namespace SoSimpleDb
             ThrowExceptionIfNotExists(id);
 
             data.Remove(Select(id));
+
+            WriteDataToFileStorage();
         }
 
         /// <summary>
@@ -142,6 +147,14 @@ namespace SoSimpleDb
             if (!data.Any(x => x.Id == id))
             {
                 throw new IdNotFoundException($"Object of type ${typeof(T).FullName} with Id ${id} has not been found in Db.");
+            }
+        }
+
+        private void WriteDataToFileStorage()
+        {
+            if(!File.Exists(FileStoragePath))
+            {
+                File.Create(FileStoragePath);
             }
         }
     }
