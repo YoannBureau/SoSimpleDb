@@ -25,7 +25,7 @@ namespace SoSimpleDb
             ReadDataFromFileStorage();
         }
 
-        private string configCustomPathName = "SoSimpleDb.CustomFile";
+        private string configCustomPathName = "SoSimpleDb.CustomFileStoragePath";
         private string defaultPath = "Data.ssdb";
         private static List<T> data = new List<T>();
 

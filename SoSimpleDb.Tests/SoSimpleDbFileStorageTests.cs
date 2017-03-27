@@ -229,17 +229,17 @@ namespace SoSimpleDb.Tests
         private void AddCustomPathToConfigurationFile(string customPath)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings.Add("SoSimpleDb.CustomFile", customPath);
+            config.AppSettings.Settings.Add("SoSimpleDb.CustomFileStoragePath", customPath);
             config.Save(ConfigurationSaveMode.Modified, true);
             ConfigurationManager.RefreshSection("appSettings");
         }
 
         private void EnsureThatThereIsNoCustomPathInApplicationFile()
         {
-            if (ConfigurationManager.AppSettings.AllKeys.Any(x => x == "SoSimpleDb.CustomFile"))
+            if (ConfigurationManager.AppSettings.AllKeys.Any(x => x == "SoSimpleDb.CustomFileStoragePath"))
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings.Remove("SoSimpleDb.CustomFile");
+                config.AppSettings.Settings.Remove("SoSimpleDb.CustomFileStoragePath");
                 config.Save(ConfigurationSaveMode.Modified, true);
                 ConfigurationManager.RefreshSection("appSettings");
             }
