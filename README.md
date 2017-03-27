@@ -70,7 +70,7 @@ var personCount = SoSimpleDb<Person>.Instance.Count();
 Calm down. It's stored in a JSON file named `Data.ssdb` located by default in the path of your executing assembly.
 
 ## Add a custom path for the storage file
-Simply add a new AppSetting in your application configuration file with the `SoSimpleDb.CustomFile` key. For example:
+Simply add a new AppSetting in your application configuration file with the `SoSimpleDb.CustomFileStoragePath` key. For example:
 ```xml
-<add key="SoSimpleDb.CustomStorageFile" value="C:\Users\MyUser\Documents\test.ssdb"/>
+<add key="SoSimpleDb.CustomFileStoragePath" value="C:\Users\MyUser\Documents\test.ssdb"/>
 ```
